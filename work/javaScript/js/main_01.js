@@ -1,11 +1,13 @@
 function slideShow() {
   var $container = document.querySelector('#slideshow');
-  var $slideGroup = document.querySelector('.slideshow-wrapper');
-  var $slide = document.querySelectorAll('.slide');
-  var $nav = document.querySelector('.slideshow-nav');
-  var $indicator = document.querySelector('.slideshow-indicator');
+  var $slideGroup = $container.querySelector('.slideshow-wrapper');
+  var $slides = $slideGroup.querySelectorAll('.slide');
+  var $nav = $container.querySelector('.slideshow-nav');
+  var $indicator = $container.querySelector('.slideshow-indicator');
+  var $navPrev = $nav.querySelector('.prev');
+  var $navNext = $nav.querySelector('.next');
 
-  var totalSlide = $slide.length;
+  var totalSlide = $slides.length;
   var indicatorHTML = '';
   var currentIndex = 0;
   var duration = 500;
@@ -14,18 +16,16 @@ function slideShow() {
 
   // 各slideを横一面に並べる
   for(var i = 0; i < totalSlide; i++) {
-    $slide[i].style.left = (100 * i) + '%';
+    $slides[i].style.left = (100 * i) + '%';
     indicatorHTML += '<a href="./">' + (i + 1) + '</a>';
   }
 
   // インジケーターにコンテンツを挿入
-  $indicator.insertAdjacentHTML('afterbegin', indicatorHTML);
+  $indicator.insertAdjacentHTML('beforeend', indicatorHTML);
 
   // コンテンツを表示する関数
   function goToSlide(index) {
-    $slideGroup.animate({
-      left: (- 100 * index) + '%'
-    }, duration);
+    $slideGroup.style.left = (- 100 * index) + '%';
 
     // 現在のインデックス情報を更新
     currentIndex = index;
@@ -35,9 +35,6 @@ function slideShow() {
 
   // ナビゲーションとインジケーターの情報を更新する関数
   function updateNav() {
-    var $navPrev = document.querySelector('.prev');
-    var $navNext = document.querySelector('.next');
-
     if (currentIndex == 0) {
       $navPrev.classList.add('hidden');
     } else {
@@ -50,8 +47,11 @@ function slideShow() {
       $navNext.classList.remove('hidden');
     }
 
-    $indicator.querySelector('a').classList.remove('active');
-    $indicator.querySelector('a' + ':nth-child(' + (currentIndex + 1) + ')').classList.add('active');
+    var $indicatorAnchors = $indicator.querySelectorAll('a');
+    for (var i = 0; i < $indicatorAnchors.length; i ++) {
+      $indicatorAnchors[i].classList.remove('active');
+    }
+    $indicatorAnchors[currentIndex].classList.add('active');
   }
 
   // 自動でページ送りする関数
@@ -70,22 +70,23 @@ function slideShow() {
   }
 
   // ナビゲーションのリンクがクリックされたら該当するスライドを表示
-  $nav.querySelector('a').addEventListener('click', function(event) {
-    event.stopPropagation();
+  $navPrev.addEventListener('click', function(event) {
     event.preventDefault();
-    if (this.className == 'prev') {
-      goToSlide(currentIndex - 1);
-    } else {
-      goToSlide(currentIndex + 1);
-    }
+    goToSlide(currentIndex - 1);
+  });
+  $navNext.addEventListener('click', function(event) {
+    event.preventDefault();
+    goToSlide(currentIndex + 1);
   });
 
   // インジケーターがクリックされたら該当するスライドを表示
-  $indicator.querySelector('a').addEventListener('click', function(event) {
-    event.stopPropagation();
+  $indicator.addEventListener('click', function(event) {
     event.preventDefault();
-    if (this.className != 'active') {
-      goToSlide(Number(this.innerHTML) - 1);
+    var $indicatorParent = event.target.parentNode;
+    var $indicatorChildren = $indicatorParent.querySelectorAll('a');
+    var targetIndex = Array.prototype.indexOf.call($indicatorChildren, event.target);
+    if ($indicatorChildren[targetIndex].className != 'active') {
+      goToSlide(targetIndex);
     }
   });
 
@@ -100,4 +101,6 @@ function slideShow() {
   startTimer();
 }
 
-window.onload = slideShow;
+window.addEventListener('load', function() {
+  slideShow();
+});
