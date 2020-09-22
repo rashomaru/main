@@ -3,7 +3,9 @@
  * デザイン自体はjQueryの参考書のを参考にし作成。
  */
 
-// スライドショーの関数
+/*
+ * Slide Show
+ */
 function slideShow() {
   var $container = document.querySelector('#slideshow');
   var $slideGroup = $container.querySelector('.slideshow-wrapper');
@@ -175,6 +177,46 @@ function easingEaseInOutExpo (currentTime, startPoint, distance, duration) {
   return distance / 2 * (-Math.pow(2, -10 * --currentTime) + 2) + startPoint;
 }
 
+/*
+ * Sticky Header
+ */
+function stickyHeader() {
+  var $window = window;
+  var $header = document.querySelector('#page-header');
+  var $headerClone = $header.cloneNode(true);
+  var $headerCloneContainer = document.createElement('div');
+  $headerCloneContainer.classList.add('page-header-clone');  // <div class="page-header-clone"></div>
+  $headerCloneContainer.setAttribute('id', 'page-header-clone');
+
+  // HTMLの上辺からヘッダーの底辺までの距離
+  // = ヘッダーのトップ位置 + ヘッダーの高さ
+  var $headerCssStyleDeclaration = getComputedStyle($header, null);
+  var $headerClientRect = $header.getBoundingClientRect();
+  var headerTop = $headerClientRect.top;
+  var strHeaderHeight = $headerCssStyleDeclaration.getPropertyValue('height');  // ○○px という文字列が入る
+  var headerHeight = Number(strHeaderHeight.replace('px', ''));
+  var threshold = headerTop + headerHeight;
+
+  // コンテナーにヘッダークローンを挿入
+  $headerCloneContainer.insertAdjacentHTML('beforeend', $headerClone.innerHTML);
+
+  // コンテナーをbodyの最後に挿入
+  document.querySelector('body').insertAdjacentHTML('beforeend', $headerCloneContainer.outerHTML);
+
+  // イベントの設定
+  $window.addEventListener('scroll', function() {
+    var $pageHeaderClone = document.querySelector('.page-header-clone');
+    if ($window.pageYOffset > threshold) {
+      $pageHeaderClone.classList.add('visible');
+    } else {
+      $pageHeaderClone.classList.remove('visible');
+    }
+  });
+
+  // スクロールイベントを発生させる
+  $window.scroll();
+}
 window.addEventListener('load', function() {
   slideShow();
+  stickyHeader();
 });
