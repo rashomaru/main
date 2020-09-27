@@ -216,7 +216,54 @@ function stickyHeader() {
   // スクロールイベントを発生させる
   $window.scroll();
 }
+
+/*
+ * tabs panel
+ */
+function tabPanel() {
+  // DOM化
+  var $container = document.querySelector('#work');
+  var $tabList = $container.querySelector('.tabs-nav');
+  var $tabListAnchors = $tabList.querySelectorAll('a');
+  var $tabPanels = $container.querySelectorAll('.tabs-panel');
+  
+  // タブがクリックされたときの処理
+  $tabList.addEventListener('click', function(event) {
+    event.preventDefault();
+    var $targetTabHTML = event.target;                             // <a href="">○○</a>が入る
+    var targetTabAttribute = $targetTabHTML.getAttribute('href');  // ↑のhrefの中身が入る
+
+    // もし既に選択されたタブなら何もせずに処理を終了
+    if ($targetTabHTML.className == 'active') {
+      return;
+    }
+
+    // 全てのタブの選択状態を解除
+    for (var i = 0; i < $tabListAnchors.length; i++) {
+      $tabListAnchors[i].classList.remove('active');
+    }
+
+    // クリックされたタブを選択状態にする
+    $targetTabHTML.classList.add('active');
+
+    // 全てのパネルを非表示
+    for (var i = 0; i < $tabPanels.length; i++) {
+      $tabPanels[i].classList.add('hidden');
+    }
+
+    // 選択されたパネルを表示
+    $container.querySelector(targetTabAttribute).classList.remove('hidden');
+  });
+
+  // read-more ボタンの制御
+
+
+  // 最初のパネルを表示
+  $tabListAnchors[0].click();
+}
+
 window.addEventListener('load', function() {
   slideShow();
   stickyHeader();
+  tabPanel();
 });
