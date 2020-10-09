@@ -1,3 +1,5 @@
+'use strict';
+
 window.addEventListener('load', function() {
   let $contents = document.querySelector('.contents');
   jsBasic($contents);
@@ -5,32 +7,18 @@ window.addEventListener('load', function() {
 
 function jsBasic($object) {
   /*
-   * Mapオブジェクト及びfor~ofの学習
+   * Objectオブジェクト
    */
-  let m = new Map();
-  m.set('dog', 'わんわん');
-  m.set('cat', 'にゃー');
-  m.set('mouse', 'ちゅー');
-
-  let strHTML = '';
-  strHTML = m.size + '<br>'
-          + m.get('dog') + '<br>'
-          + m.has('cat') + '<br>';
-
-  // キーを順に取得
-  for (let key of m.keys()) {
-    strHTML += key + '<br>';
-  }
-
-  // 値を順に取得
-  for (let value of m.values()) {
-    strHTML += value + '<br>';
-  }
-
-  // キー / 値を取得
-  for (let [key, value] of m.entries()) {
-    strHTML += 'キー：' + key + ' 値：' + value + '<br>';
-  }
-
-  $object.innerHTML = strHTML;
+  let data = {
+    red: '赤色',
+    yellow: '黄色'
+  };
+  let proxy = new Proxy(data, {
+    get(target, prop) {
+      return prop in target ? target[prop] : '?';
+    }
+  });
+  proxy.red = 'レッド';
+  console.log(data.red);
+  console.log(proxy.red);
 }

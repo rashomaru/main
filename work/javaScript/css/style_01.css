@@ -20,13 +20,15 @@ body {
   font-family: 'Dancing Script', "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
   background-color: #666;
   margin: 0;
+  min-width: 960px;
+  overflow-x: hidden;
 }
 
 .header {
   background-color: #fff;
   width: 100%;
   height: 10rem;
-  padding: 5px;
+  padding: 5px 0;
 }
 
 .inner {
@@ -50,10 +52,10 @@ body {
   text-align: center;
 }
 
-.slideshow {
+#slideshow {
   background: #000;
-  width: 1600px;
   height: 700px;
+  min-width: 960px;
   overflow: hidden;
   position: relative;
 }
@@ -64,7 +66,7 @@ body {
   position: absolute;
 }
 
-.slide {
+.slideshow-wrapper .slide {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -105,7 +107,7 @@ body {
 }
 
 .slideshow-nav a.next {
-  margin-left: 408px;
+  margin-left: 600px;
   transform: rotate(180deg);
 }
 
@@ -164,7 +166,7 @@ body {
   width: 100%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
   height: 50px;
-  padding: 10px;
+  padding: 10px 0;
 }
 
 .page-header h1 {
@@ -255,7 +257,7 @@ body {
 #topics {
   width: 100%;
   height: 500px;
-  padding: 50px 20px 0;
+  padding-top: 50px;
   background: rgb(255, 255, 255);
   border-top: 1px solid rgba(0, 0, 0, 0.6);
   border-bottom: 1px solid rgba(0, 0, 0, 0.6);
@@ -456,8 +458,7 @@ body {
   border-width: 0;
   cursor: pointer;
   display: block;
-  padding: 0;
-  margin: 16px;
+  padding: 16px;
   width: 100%;
 }
 
